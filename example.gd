@@ -83,7 +83,7 @@ func serverClose():
 	
 func _ready():
 	#mastodon vars
-	var api_base_url = "mastodon.cloud"
+	var api_base_url = "https://hex.bz"
 	var register_app = "/api/v1/apps"
 	var client_name = "mastodot"
 	var client_id
