@@ -44,10 +44,13 @@ func remove_html_tags(string):
 				end_tag = find_end_tag(string, i)
 			elif string[i+1] == 'b':
 				end_tag = find_end_tag(string, i)
+				clean_string += "\n"
 			elif string[i+1] == 'p':
 				end_tag = find_end_tag(string, i)
+				clean_string += " "
 			elif string[i+1] == '/':
 				end_tag = find_end_tag(string, i)
+			
 
 
 		if i > end_tag:
@@ -263,15 +266,23 @@ func _ready():
 	#authorize()
 	get_access_token()
 	var diag_text = get_node("dialog_box/diag_text/Label")
+	
 
 	var timeline_json = read_variable("timeline.text")
 	var statuses = {}
 	statuses = parse_timeline(timeline_json)
 	#print(timeline[0]['content'])
-	
-	print(statuses.keys())
-	for status in statuses['Pizzazz@meow.social']:
-		diag_text.add_dialog_text(status)
+	var box
+	var pos = Vector2(0, 100)
+	for user in statuses.keys():
+		box = preload("res://dialogbox.tscn").instance()
+		box.init(pos, statuses[user])
+		add_child(box)
+		pos[0] = int(pos[0] + 250)
+		if(pos[0] > 500):
+			pos[0] = 0
+			pos[1] += 300
+		
 
 
 	

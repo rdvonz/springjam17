@@ -6,8 +6,14 @@ extends Node2D
 var tick = 0
 var state
 var cursor_flicker = 10
+var center = Vector2(0, 0)
+var size = Vector2(200, 75)
 onready var timer = get_node("diag_text/Text Scroll")
 
+func init(pos, dialog_text_array):
+	center = pos
+	get_node("diag_text/Label").set_dialog_text(dialog_text_array)
+	resize_box()
 
 func draw_circle_arc(center, radius, angle_from, angle_to, color):
 	var nb_points = 32
@@ -54,14 +60,21 @@ func draw_dialog_box(pos, size, color):
 func flash_cursor(pos, color):
 	draw_rect(Rect2(pos, Vect2(20, 20)), color) 
 
+func resize_box():
+	var text = get_node("diag_text/Label")
+	var lines = text.get_line_count()
+	print(lines)
+	var vert_size = max(6*lines, 75)
+	size = Vector2(230, vert_size)
 
 func _draw():
-	var center = Vector2(0, 0)
-	var size = Vector2(200, 75)
+	
+	
 	var radius = 10
 	var angle_from = 0
 	var angle_to = 90
 	var color = Color(0, 0, 0.0)
+
 	draw_dialog_box(center, size, color)
 	
 func _ready():
