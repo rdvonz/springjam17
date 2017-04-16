@@ -2,3 +2,5 @@
 *.sh
 *.pem
 *.txt
+.directory
+user_access_token

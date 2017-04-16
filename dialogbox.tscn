@@ -13,3 +13,4 @@ transform/pos = Vector2( 0, 0 )
 transform/scale = Vector2( 1, 1 )
 
 
+[editable path="diag_text"]

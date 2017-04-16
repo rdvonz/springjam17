@@ -6,12 +6,13 @@
 [node name="Node" type="Node"]
 
 script/script = ExtResource( 1 )
+DEFAULT_BASE_URL = "hex.bz"
 
 [node name="Control" parent="." instance=ExtResource( 2 )]
 
-margin/left = 250.0
-margin/top = 90.0
-margin/right = 290.0
-margin/bottom = 130.0
+margin/left = 284.0
+margin/top = 143.0
+margin/right = 324.0
+margin/bottom = 183.0
 
 

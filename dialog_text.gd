@@ -3,7 +3,7 @@ extends Label
 # class member variables go here, for example:
 # var a = 2
 # var b = "textvar"
-var dialogText = []
+var dialogText = ["This is.", "Example Text.", "Hey!"]
 var curDialog = 0
 var state = 0
 var tick = 0.0
@@ -23,7 +23,13 @@ func change_state(s):
 	state = s
 	text_visible = 0
 
-	
+func next_dialog():
+	if(timer.get_time_left() == 0):
+		set_text(dialogText[curDialog])
+		#print("%d: %s" %[curDialog, dialogText[curDialog]])
+		curDialog = (1 + curDialog) % dialogText.size()
+		timer.start()
+
 func _ready():
 	# Called every time the node is added to the scene.
 	# Initialization here
@@ -34,10 +40,10 @@ func _ready():
 func _process(delta):
 	set_percent_visible(1 - timer.get_time_left()/timer.get_wait_time())
 	
-func _input(event):
-	if(event.is_action_pressed("INPUT_INTERACT") && timer.get_time_left() == 0):
-		set_text(dialogText[curDialog])
-		#print("%d: %s" %[curDialog, dialogText[curDialog]])
-		curDialog = (1 + curDialog) % dialogText.size()
-		timer.start()
-		
+#func _input(event):
+#	if(event.is_action_pressed("INPUT_INTERACT") && timer.get_time_left() == 0):
+#		set_text(dialogText[curDialog])
+#		#print("%d: %s" %[curDialog, dialogText[curDialog]])
+#		curDialog = (1 + curDialog) % dialogText.size()
+#		timer.start()
+#		

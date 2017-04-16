@@ -2,7 +2,7 @@
 extends Node
 var HEADERS
 var http
-var DEFAULT_BASE_URL = "mastodon.cloud"
+export var DEFAULT_BASE_URL = "mastodon.cloud"
 var access_json = {}
 var access_token
 
@@ -181,7 +181,6 @@ func get_access_token():
 	var file = File.new()
 	if not file.file_exists("user_access_token"):
 		authorize()
-
 	file.open("user_access_token", file.READ)
 	access_token = file.get_var()
 
@@ -192,8 +191,8 @@ func authorize():
 	var oauth_json = get_oauth_json()
 	print(oauth_json)
 	var scope = "read write follow"
-	OS.shell_open("https://mastodon.cloud/oauth/authorize?scope=%s&response_type=code&client_id=%s&redirect_uri=%s" 
-					% [scope, oauth_json['client_id'], oauth_json['redirect_uri']])
+	OS.shell_open("https://%s/oauth/authorize?scope=%s&response_type=code&client_id=%s&redirect_uri=%s" 
+					% [DEFAULT_BASE_URL, scope, oauth_json['client_id'], oauth_json['redirect_uri']])
 	var button = get_node("Control/Button")
 	yield(button, "button_down")
 	var code = get_node("Control/Button/LineEdit").get_text()
@@ -274,7 +273,7 @@ func _ready():
 
 	var timeline_json = read_variable("timeline.text")
 	var statuses = {}
-	statuses = parse_timeline(timeline_json)
+	statuses = parse_timeline(get_timeline())
 	#print(timeline[0]['content'])
 	var box
 	var pos = Vector2(0, 100)
