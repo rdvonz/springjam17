@@ -177,11 +177,14 @@ func get_oauth_json():
 
 func get_access_token():
 	var file = File.new()
+	if not file.file_exists("user_access_token"):
+		authorize()
+
 	file.open("user_access_token", file.READ)
 	access_token = file.get_var()
 
 func authorize():
-	
+
 	connectToServer()
 	
 	var oauth_json = get_oauth_json()
@@ -263,7 +266,6 @@ func _ready():
 
 	# Should only be necessary once: 
 	#create_app("mastodot")
-	#authorize()
 	get_access_token()
 	var diag_text = get_node("dialog_box/diag_text/Label")
 	
