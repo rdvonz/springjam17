@@ -2,7 +2,7 @@
 extends Node
 var HEADERS
 var http
-var DEFAULT_BASE_URL = "mastodon.cloud"
+var DEFAULT_BASE_URL = "hex.bz"
 var client_name = "mastodot"
 var client_id
 var client_secret
@@ -83,6 +83,38 @@ func create_app(client_name, scopes = "read write follow",
 	else:
 		file.open(to_file, file.WRITE)
 	file.store_var(response)
+
+func log_in(user, password):
+	var file = File.new()
+	file.open("oauth_app_creds.txt", file.READ)
+	var oauth_creds = file.get_var()
+	var oauth_json = {}
+	oauth_json.parse_json(oauth_creds)
+	var data = {
+		'client_id' : oauth_json['client_id'],
+		'client_secret' : oauth_json['client_secret'],
+		'grant_type' : "password",
+		'username' : user,
+		'password' : password}
+		
+	var result = postServer("/oauth/token", data)
+	print(result)
+
+func fetch_user_data(url):
+	pass
+	
 func _ready():
 	connectToServer()
-	create_app("mastodot")
+	var user_file = File.new()
+	user_file.open("usercreds.txt", user_file.READ)
+	var user_creds = {}
+	user_creds.parse_json(user_file.get_as_text())
+
+	log_in(user_creds['username'], user_creds['password'])
+	
+	# Should only be necessary once: 
+	#create_app("mastodot")
+	
+	
+	#curl -X POST -d "client_id=CLIENT_ID_HERE&client_secret=CLIENT_SECRET_HERE&grant_type=password&username=YOUR_EMAIL&password=YOUR_PASSWORD" -Ss https://mastodon.social/oauth/token
+	
