@@ -5,28 +5,55 @@ var http
 var DEFAULT_BASE_URL = "mastodon.cloud"
 var access_json = {}
 var access_token
+
+func find_end_tag(string, start):
+	var end = -1
+	for i in range(start, string.length()):
+		if(string[i] == ">"):
+			end = i
+			break
+	return end
+
+func parse_link(string, start):
+	var in_text = false
+	var end = -1
+	var link_text = ""
+	for i in range(start, string.length()):
+		if string[i-1] == ">":
+			in_text = true
+		if in_text:
+			link_text += string[i]
+			if string[i+1] == "<":
+				end = i
+				break
+	return [end, link_text]
+		
+
 func remove_html_tags(string):
 	var clean_string = ""
-	var possible_tag = ""
-	var tag_found = -1
+	var end_tag = -1
 	var bin = []
+	var link
 	for i in range(0, string.length()):
 		
 		if string[i] == "<":
-			for j in range(i, string.length()):
-				possible_tag += string[j]
-				
-				if string[j] == ">" and (j - i) <= 5:
-					bin.push_back(possible_tag)
-					possible_tag = ""
-					tag_found = j
-					clean_string += " "
-					print(tag_found)
-					break
+			#link
+			if string[i+1] == 'a':
+				end_tag = find_end_tag(string, i)
+			elif string.substr(i+1, 4) == 'span':
+				end_tag = find_end_tag(string, i)
+			elif string[i+1] == 'b':
+				end_tag = find_end_tag(string, i)
+			elif string[i+1] == 'p':
+				end_tag = find_end_tag(string, i)
+			elif string[i+1] == '/':
+				end_tag = find_end_tag(string, i)
 
-		if i > tag_found:
+
+		if i > end_tag:
 			clean_string += string[i]
-		
+
+
 	return clean_string
 
 func connectToServer(url=DEFAULT_BASE_URL):
@@ -192,19 +219,59 @@ func fetch_user_data(url):
 	var resp = server_get(url, headers)
 	return resp
 
-func get_timeline(index):
+func store_variable(variable, filename):
+	var file = File.new()
+	file.open(filename, file.WRITE)
+	file.store_var(variable)
+	file.close()
+
+func read_variable(filename):
+	var file = File.new()
+	file.open(filename, file.READ)
+	return file.get_var()
+
+func get_timeline():
 	var resp = fetch_user_data("/api/v1/timelines/home")
 	var json = str('{"array":',  resp, '}')
 	var dict = {}
 	dict.parse_json(json)
-	return dict['array'][index]
+	return dict['array']
+
+func get_status(status):
+	return remove_html_tags(status['content'])
+
+func get_account(status):
+	return status['account']['acct']
+
+func parse_timeline(timeline):
+	var account = ""
+	var content = ""
+	var timeline_dict = {}
+	for status in timeline:
+		account = get_account(status)
+		content = get_status(status)
+		
+		if not timeline_dict.has(account):
+			timeline_dict[account] = []
+
+		timeline_dict[account].push_back(content)
+	return timeline_dict
 func _ready():
 
 	# Should only be necessary once: 
 	#create_app("mastodot")
 	#authorize()
 	get_access_token()
-	print(remove_html_tags(get_timeline(5)['content']))
+	var diag_text = get_node("dialog_box/diag_text/Label")
+
+	var timeline_json = read_variable("timeline.text")
+	var statuses = {}
+	statuses = parse_timeline(timeline_json)
+	#print(timeline[0]['content'])
+	
+	print(statuses.keys())
+	for status in statuses['Pizzazz@meow.social']:
+		diag_text.add_dialog_text(status)
 
 
 	
