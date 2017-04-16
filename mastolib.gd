@@ -169,6 +169,8 @@ func create_app(client_name, scopes = "read write follow",
 
 func get_oauth_json():
 	var file = File.new()
+	if not file.file_exists("oauth_app_creds.txt"):
+		create_app("mastodot")
 	file.open("oauth_app_creds.txt", file.READ)
 	var oauth_creds = file.get_var()
 	var oauth_json = {}
