@@ -285,8 +285,4 @@ func _ready():
 		if(pos[0] > 500):
 			pos[0] = 0
 			pos[1] += 300
-		
-
-
-	
-	
+	global.goto_scene("res://scenes/main.tscn")
