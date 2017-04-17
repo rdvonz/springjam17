@@ -78,6 +78,4 @@ func _process(delta):
 
 	if not is_stopped:
 		set_pos(Vector2(get_pos().x - delta*100, get_pos().y))
-		
-func _init(char_set):
-	self.character_set = char_set
+
