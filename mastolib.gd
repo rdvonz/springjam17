@@ -262,17 +262,19 @@ func get_public_accounts():
 		accounts.push_back(get_account(status))
 	
 	return accounts
+func get_home_timeline():
+	return parse_timeline(get_timeline("home"))
 
 func get_public_timeline():
-	return get_timeline("public")
+	return parse_timeline(get_timeline("public"))
 
 func get_status(status):
 	return remove_html_tags(status['content'])
 
 func get_account(status):
 	var account = status['account']['acct']
-	if not "@" in account:
-		account += "@%s" % DEFAULT_BASE_URL
+	if "@" in account:
+		account = account.split("@")[0]
 	return account
 
 func parse_timeline(timeline):
