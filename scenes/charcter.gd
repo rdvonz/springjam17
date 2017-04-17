@@ -7,8 +7,8 @@ var anim
 var character
 var is_stopped
 var diag_box
+var set = ["witch", "character_parts"]
 var character_set
-
 func _ready():
 	get_node("Area2D").connect("body_enter", self, "stop_character")
 	get_node("Area2D").connect("body_exit", self, "start_character")
@@ -17,7 +17,10 @@ func _ready():
 	character = get_node("sprite")
 	set_process(true)
 	set_process_input(true)
+	randomize()
+	self.character_set = set[int(rand_range(0,2))]
 	change_sprites(get_node("sprite"), character_set)
+	
 
 func stop_character(body):
 	if not body.is_chatting():
@@ -26,12 +29,6 @@ func stop_character(body):
 		anim.stop()
 		get_node("talk").show()
 		is_stopped = true
-	
-	#get_node("dialog_box").show()
-	print("stop")
-	anim.stop()
-	get_node("talk").show()
-	is_stopped = true
 
 func start_character(body):
 	body.stop_chatting()
@@ -54,14 +51,14 @@ func change_sprites(node, sprite_name):
 	for n in node.get_children():
 		if n.get_child_count() >= 0:
 			if(n.get_type() == "Sprite"):
-				var tex_string = "res://assets/" + sprite_name + "/" + n.get_name() + ".png"
+				var tex_string = "res://assets/" + sprite_name + "/_" + n.get_name() + ".png"
 				var tex = load(str(tex_string))
 				n.set_texture(tex)
 				print(tex_string)
 				change_sprites(n, sprite_name)
 		else:
 			if(n.get_type() == "Sprite"):
-				var tex_string = "res://assets/" + sprite_name + "/" + n.get_name() + ".png"
+				var tex_string = "res://assets/" + sprite_name + "/_" + n.get_name() + ".png"
 				var tex = load(str(tex_string))
 				print(tex_string)
 				change_sprites(n, sprite_name)
@@ -70,5 +67,4 @@ func _process(delta):
 	if not is_stopped:
 		set_pos(Vector2(get_pos().x - delta*100, get_pos().y))
 		
-func _init(char_set):
-	self.character_set = char_set
+

@@ -1,28 +1,28 @@
 [gd_scene load_steps=20 format=1]
 
 [ext_resource path="res://scenes/charcter.gd" type="Script" id=1]
-[ext_resource path="res://assets/character_parts/arm_r.png" type="Texture" id=2]
-[ext_resource path="res://assets/character_parts/hand_r.png" type="Texture" id=3]
-[ext_resource path="res://assets/character_parts/hip.png" type="Texture" id=4]
-[ext_resource path="res://assets/character_parts/torso.png" type="Texture" id=5]
-[ext_resource path="res://assets/character_parts/arm_l.png" type="Texture" id=6]
-[ext_resource path="res://assets/character_parts/hand_l.png" type="Texture" id=7]
-[ext_resource path="res://assets/character_parts/head.png" type="Texture" id=8]
-[ext_resource path="res://assets/character_parts/leg_r.png" type="Texture" id=9]
-[ext_resource path="res://assets/character_parts/shin_r.png" type="Texture" id=10]
-[ext_resource path="res://assets/character_parts/shoe_r.png" type="Texture" id=11]
-[ext_resource path="res://assets/character_parts/leg_l.png" type="Texture" id=12]
-[ext_resource path="res://assets/character_parts/shin_l.png" type="Texture" id=13]
-[ext_resource path="res://assets/character_parts/shoe_l.png" type="Texture" id=14]
+[ext_resource path="res://assets/character_parts/_arm_r.png" type="Texture" id=2]
+[ext_resource path="res://assets/character_parts/_hand_r.png" type="Texture" id=3]
+[ext_resource path="res://assets/character_parts/_hip.png" type="Texture" id=4]
+[ext_resource path="res://assets/character_parts/_torso.png" type="Texture" id=5]
+[ext_resource path="res://assets/character_parts/_arm_l.png" type="Texture" id=6]
+[ext_resource path="res://assets/character_parts/_hand_l.png" type="Texture" id=7]
+[ext_resource path="res://assets/character_parts/_head.png" type="Texture" id=8]
+[ext_resource path="res://assets/character_parts/_leg_r.png" type="Texture" id=9]
+[ext_resource path="res://assets/character_parts/_shin_r.png" type="Texture" id=10]
+[ext_resource path="res://assets/character_parts/_shoe_r.png" type="Texture" id=11]
+[ext_resource path="res://assets/character_parts/_leg_l.png" type="Texture" id=12]
+[ext_resource path="res://assets/character_parts/_shin_l.png" type="Texture" id=13]
+[ext_resource path="res://assets/character_parts/_shoe_l.png" type="Texture" id=14]
 [ext_resource path="res://dialogbox.tscn" type="PackedScene" id=15]
 [ext_resource path="res://assets/question_mark.png" type="Texture" id=16]
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
 extents = Vector2( 138.703, 226.243 )
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=2]
 
 length = 1.0
 loop = false
@@ -951,7 +951,7 @@ script/script = ExtResource( 1 )
 [node name="Area2D" type="Area2D" parent="."]
 
 input/pickable = true
-shapes/0/shape = SubResource( 4 )
+shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 0.595693, 0, 0, 1, 54.1251, -44.5597 )
 shapes/0/trigger = false
 gravity_vec = Vector2( 0, 1 )
@@ -963,7 +963,7 @@ angular_damp = 1.0
 
 transform/pos = Vector2( 54.1251, -44.5597 )
 transform/scale = Vector2( 0.595693, 1 )
-shape = SubResource( 4 )
+shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
@@ -972,7 +972,7 @@ _update_shape_index = 0
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/rest = SubResource( 5 )
+anims/rest = SubResource( 2 )
 anims/walk = SubResource( 3 )
 playback/active = true
 playback/speed = 1.0
