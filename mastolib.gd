@@ -185,7 +185,12 @@ func get_access_token():
 	access_token = file.get_var()
 
 	
-
+func file_exists(f):
+	var file = File.new()
+	print(file.file_exists(f))
+	if file.file_exists(f):
+		return true
+	return false
 func authorize():
 
 	connectToServer()
@@ -213,7 +218,6 @@ func authorize():
 	var file = File.new()
 	file.open("user_access_token", file.WRITE)
 	file.store_var(access_token)
-	global.goto_scene("res://scenes/main.tscn")
 
 
 func fetch_user_data(url):
@@ -270,20 +274,23 @@ func _ready():
 	# Should only be necessary once: 
 	#create_app("mastodot")
 	get_access_token()
+	set_process(true)
 	var diag_text = get_node("dialog_box/diag_text/Label")
 	
+	
+#	var box
+#	var pos = Vector2(0, 100)
+#	for user in statuses.keys():
+#		box = preload("res://dialogbox.tscn").instance()
+#		box.init(pos, statuses[user])
+#		add_child(box)
+#		pos[0] = int(pos[0] + 250)
+#		if(pos[0] > 500):
+#			pos[0] = 0
+#			pos[1] += 300
 
-	var timeline_json = read_variable("timeline.text")
-	var statuses = {}
-	statuses = parse_timeline(get_timeline())
-	#print(timeline[0]['content'])
-	var box
-	var pos = Vector2(0, 100)
-	for user in statuses.keys():
-		box = preload("res://dialogbox.tscn").instance()
-		box.init(pos, statuses[user])
-		add_child(box)
-		pos[0] = int(pos[0] + 250)
-		if(pos[0] > 500):
-			pos[0] = 0
-			pos[1] += 300
+func _process(delta):
+	if file_exists("user_access_token"):
+		global.goto_scene("res://scenes/main.tscn")
+		OS.delay_msec(500)
+#
