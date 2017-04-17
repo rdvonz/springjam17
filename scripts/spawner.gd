@@ -16,7 +16,7 @@ func _ready():
 	timer.start()
 
 func fetch_more_statuses():
-	statuses = mastolib.get_home_timeline()
+	statuses = mastolib.get_public_timeline()
 
 
 func spawn_new_tooter():

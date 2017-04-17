@@ -2,7 +2,7 @@
 extends Node
 var HEADERS
 var http
-export var DEFAULT_BASE_URL = "mastodon.cloud"
+export var DEFAULT_BASE_URL = "hex.bz"
 var access_json = {}
 var access_token
 

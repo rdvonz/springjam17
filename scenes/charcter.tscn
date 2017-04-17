@@ -946,6 +946,7 @@ tracks/27/keys = {
 
 [node name="character" type="Node2D"]
 
+transform/scale = Vector2( 0.3, 0.3 )
 script/script = ExtResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -985,14 +986,14 @@ autoplay = "walk"
 
 transform/pos = Vector2( 8.00437, -131.046 )
 transform/rot = 21.7426
+transform/scale = Vector2( 1, 1 )
 texture = ExtResource( 2 )
 offset = Vector2( 0, 40 )
 
 [node name="hand_r" type="Sprite" parent="sprite/arm_r"]
 
-transform/pos = Vector2( -23.1651, 69.2049 )
+transform/pos = Vector2( -23.165, 69.2047 )
 transform/rot = -33.7351
-transform/scale = Vector2( 1, 1 )
 texture = ExtResource( 3 )
 offset = Vector2( 0, 30 )
 
@@ -1168,5 +1169,33 @@ visibility/visible = false
 transform/pos = Vector2( 23.4861, -300.737 )
 transform/scale = Vector2( 0.401392, 0.401392 )
 texture = ExtResource( 16 )
+
+[node name="Panel" type="Panel" parent="."]
+
+rect/scale = Vector2( 3, 3 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = -559.0
+margin/top = -271.0
+margin/right = -401.0
+margin/bottom = -231.0
+
+[node name="Label" type="Label" parent="Panel"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 157.0
+margin/bottom = 41.0
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 
