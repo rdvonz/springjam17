@@ -31,13 +31,13 @@ var prev_jump_pressed = false
 func get_chatting_with():
 	return chatting_with
 func set_chatting_with(character):
-	chatting_with = character.get_index()
+	chatting_with = character
 
 func stop_chatting():
 	chatting_with = null
 
 func is_chatting():
-	if chatting_with == null:
+	if chatting_with != null:
 		return true
 	else:
 		return false

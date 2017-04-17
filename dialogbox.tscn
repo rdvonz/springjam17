@@ -12,5 +12,11 @@ script/script = ExtResource( 1 )
 transform/pos = Vector2( 0, 0 )
 transform/scale = Vector2( 1, 1 )
 
+[node name="Label" parent="diag_text"]
+
+margin/left = 0.0
+margin/right = 10.0
+margin/bottom = 1.0
+
 
 [editable path="diag_text"]

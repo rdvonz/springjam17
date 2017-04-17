@@ -8,10 +8,8 @@ var state
 var cursor_flicker = 10
 var center = Vector2(0, 0)
 var size = Vector2(200, 75)
-onready var timer = get_node("diag_text/Text Scroll")
 
-func init(pos, dialog_text_array):
-	center = pos
+func init(dialog_text_array):
 	get_node("diag_text/Label").set_dialog_text(dialog_text_array)
 	resize_box()
 
