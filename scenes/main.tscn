@@ -32,7 +32,7 @@ autostart = false
 
 transform/pos = Vector2( 516.894, -41.7978 )
 transform/scale = Vector2( 0.637289, 0.637289 )
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Node2D"]
 
@@ -55,12 +55,16 @@ shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
-[node name="house" parent="." instance=ExtResource( 4 )]
+[node name="house" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 600.601, 377.067 )
 
-[node name="player" parent="." instance=ExtResource( 5 )]
+[node name="player" parent="." instance=ExtResource( 4 )]
 
-transform/pos = Vector2( 117.286, 411.292 )
+transform/pos = Vector2( 119.091, 411.292 )
 
+[node name="character" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 324.763, 477.038 )
+transform/scale = Vector2( 0.3, 0.3 )
 
