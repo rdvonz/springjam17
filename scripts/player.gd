@@ -9,7 +9,7 @@ extends KinematicBody2D
 
 # Member variables
 const GRAVITY = 500.0 # Pixels/second
-
+var chatting_with = null
 # Angle in degrees towards either side that the player can consider "floor"
 const FLOOR_ANGLE_TOLERANCE = 40
 const WALK_FORCE = 600
@@ -28,7 +28,19 @@ var jumping = false
 
 var prev_jump_pressed = false
 
+func get_chatting_with():
+	return chatting_with
+func set_chatting_with(character):
+	chatting_with = character.get_index()
 
+func stop_chatting():
+	chatting_with = null
+
+func is_chatting():
+	if chatting_with == null:
+		return true
+	else:
+		return false
 func _fixed_process(delta):
 	# Create forces
 	var force = Vector2(0, GRAVITY)

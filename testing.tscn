@@ -1,12 +1,11 @@
 [gd_scene load_steps=3 format=1]
 
-[ext_resource path="res://mastolib.gd" type="Script" id=1]
+[ext_resource path="res://scripts/login.gd" type="Script" id=1]
 [ext_resource path="res://textinput.tscn" type="PackedScene" id=2]
 
 [node name="Node" type="Node"]
 
 script/script = ExtResource( 1 )
-DEFAULT_BASE_URL = "hex.bz"
 
 [node name="Control" parent="." instance=ExtResource( 2 )]
 
@@ -16,3 +15,4 @@ margin/right = 324.0
 margin/bottom = 183.0
 
 
+[editable path="Control"]

@@ -62,7 +62,7 @@ func remove_html_tags(string):
 func connectToServer(url=DEFAULT_BASE_URL):
 	http = HTTPClient.new()
 	var resp = http.connect(url, 443, true)
-	print("Connecting...")
+	##print("Connecting...")
 	while http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 		http.poll()
 		OS.delay_msec(500)
@@ -70,9 +70,15 @@ func connectToServer(url=DEFAULT_BASE_URL):
 	# Error catch: Could not connect
 	assert(http.get_status() == HTTPClient.STATUS_CONNECTED)
 	
-	print("Connected.")
+	#print("Connected.")
 
-func server_get(url, headers):
+func server_get(url, headers=null):
+	if headers == null:
+		var auth = "Authorization: Bearer %s" % access_token
+		var agent = "User-Agent: Pirulo/1.0 (Godot)"
+		var accept = "Accept: */*"
+		headers = [agent, accept, auth]
+
 	var err = http.request(HTTPClient.METHOD_GET, url, headers)
 
 	assert( err == OK ) # Make sure all is OK
@@ -80,13 +86,13 @@ func server_get(url, headers):
 	while (http.get_status() == HTTPClient.STATUS_REQUESTING):
     # Keep polling until the request is going on
 		http.poll()
-		print("Requesting..")
+		#print("Requesting..")
 		OS.delay_msec(500)
 
 
 	assert( http.get_status() == HTTPClient.STATUS_BODY or http.get_status() == HTTPClient.STATUS_CONNECTED ) # Make sure request finished well.
 
-	print("response? ",http.has_response()) # Site might not have a response.
+	#print("response? ",http.has_response()) # Site might not have a response.
 
 	if (http.has_response()):
 
@@ -115,21 +121,21 @@ func server_post(url, data):
 		http.poll()
 		OS.delay_msec(300)
 	# Make sure request finished
-	print(http.get_status())
+	#print(http.get_status())
 	assert(http.get_status() == HTTPClient.STATUS_BODY or http.get_status() == HTTPClient.STATUS_CONNECTED)
 	
-	print("Processing HTTP response")
+	#print("Processing HTTP response")
 	# Set up some variables
 	var rb = RawArray()
 	var chunk = 0
 	var result = 0
 	# Was there a response?
-	print("Response received?: "+str(http.has_response()))
+	#print("Response received?: "+str(http.has_response()))
 	# Raw data array
 	if http.has_response():
 		# Get response headers
 		var headers = http.get_response_headers_as_dictionary()
-		print("Response code: ", http.get_response_code())
+		##print("Response code: ", http.get_response_code())
 		while(http.get_status() == HTTPClient.STATUS_BODY):
 			http.poll()
 			chunk = http.read_response_body_chunk()
@@ -138,7 +144,7 @@ func server_post(url, data):
 			else:
 				rb = rb + chunk
 			result = rb.get_string_from_ascii()
-			print(result.to_ascii().get_string_from_ascii())
+			#print(result.to_ascii().get_string_from_ascii())
 			return result
 			
 func create_app(client_name, scopes = "read write follow",
@@ -156,7 +162,7 @@ func create_app(client_name, scopes = "read write follow",
 		request_data['redirect_uris'] = "urn:ietf:wg:oauth:2.0:oob"
 	if website != null:
 		request_data['website'] = website
-	print(request_data)
+	#print(request_data)
 	var query = request_data.to_json().to_utf8()
 	var response = server_post("/api/v1/apps", request_data)
 	
@@ -177,32 +183,31 @@ func get_oauth_json():
 	oauth_json.parse_json(oauth_creds)
 	return oauth_json
 
-func get_access_token():
+func get_access_token(textbox, button):
 	var file = File.new()
 	if not file.file_exists("user_access_token"):
-		authorize()
+		authorize(textbox, button)
 	file.open("user_access_token", file.READ)
 	access_token = file.get_var()
 
 	
 func file_exists(f):
 	var file = File.new()
-	print(file.file_exists(f))
+	#print(file.file_exists(f))
 	if file.file_exists(f):
 		return true
 	return false
-func authorize():
+func authorize(textbox, button):
 
 	connectToServer()
 	
 	var oauth_json = get_oauth_json()
-	print(oauth_json)
+	#print(oauth_json)
 	var scope = "read write follow"
 	OS.shell_open("https://%s/oauth/authorize?scope=%s&response_type=code&client_id=%s&redirect_uri=%s" 
 					% [DEFAULT_BASE_URL, scope, oauth_json['client_id'], oauth_json['redirect_uri']])
-	var button = get_node("Control/Button")
 	yield(button, "button_down")
-	var code = get_node("Control/Button/LineEdit").get_text()
+	var code = textbox.get_text()
 
 	var data = {
 	"grant_type" : "authorization_code",
@@ -243,18 +248,32 @@ func read_variable(filename):
 	file.open(filename, file.READ)
 	return file.get_var()
 
-func get_timeline():
-	var resp = fetch_user_data("/api/v1/timelines/home")
+func get_timeline(timeline):
+	var resp = fetch_user_data("/api/v1/timelines/%s" % timeline)
 	var json = str('{"array":',  resp, '}')
 	var dict = {}
 	dict.parse_json(json)
 	return dict['array']
 
+func get_public_accounts():
+	var accounts = []
+	var timeline = get_public_timeline()
+	for status in timeline:
+		accounts.push_back(get_account(status))
+	
+	return accounts
+
+func get_public_timeline():
+	return get_timeline("public")
+
 func get_status(status):
 	return remove_html_tags(status['content'])
 
 func get_account(status):
-	return status['account']['acct']
+	var account = status['account']['acct']
+	if not "@" in account:
+		account += "@%s" % DEFAULT_BASE_URL
+	return account
 
 func parse_timeline(timeline):
 	var account = ""
@@ -269,28 +288,12 @@ func parse_timeline(timeline):
 
 		timeline_dict[account].push_back(content)
 	return timeline_dict
-func _ready():
 
-	# Should only be necessary once: 
-	#create_app("mastodot")
-	get_access_token()
-	set_process(true)
-	var diag_text = get_node("dialog_box/diag_text/Label")
-	
-	
-#	var box
-#	var pos = Vector2(0, 100)
-#	for user in statuses.keys():
-#		box = preload("res://dialogbox.tscn").instance()
-#		box.init(pos, statuses[user])
-#		add_child(box)
-#		pos[0] = int(pos[0] + 250)
-#		if(pos[0] > 500):
-#			pos[0] = 0
-#			pos[1] += 300
 
-func _process(delta):
-	if file_exists("user_access_token"):
-		global.goto_scene("res://scenes/main.tscn")
-		OS.delay_msec(500)
-#
+func get_user_posts(id):
+	var resp = server_get("/api/v1/accounts/%s/statuses" % id)
+#	var json = str('{"array":',  resp, '}')
+#	var dict = {}
+#	dict.parse_json(json)
+#	return dict['array']
+	print("resp: " + resp)
