@@ -184,6 +184,8 @@ func get_access_token():
 	file.open("user_access_token", file.READ)
 	access_token = file.get_var()
 
+	
+
 func authorize():
 
 	connectToServer()
@@ -211,7 +213,7 @@ func authorize():
 	var file = File.new()
 	file.open("user_access_token", file.WRITE)
 	file.store_var(access_token)
-
+	global.goto_scene("res://scenes/main.tscn")
 
 
 func fetch_user_data(url):
@@ -285,4 +287,3 @@ func _ready():
 		if(pos[0] > 500):
 			pos[0] = 0
 			pos[1] += 300
-	global.goto_scene("res://scenes/main.tscn")
